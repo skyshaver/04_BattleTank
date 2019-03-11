@@ -2,7 +2,6 @@
 
 #include "TankPlayerController.h"
 
-
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();	// insaures we're overriding beginPlay from the super(parent) class
@@ -10,7 +9,7 @@ void ATankPlayerController::BeginPlay()
 	ATank* ControlledTank = GetControlledTank();
 
 	if (!ControlledTank) { UE_LOG(LogTemp, Warning, TEXT("Failed to capture pawn")); }
-	else { UE_LOG(LogTemp, Warning, TEXT("Pawn %s is under control"), *ControlledTank->GetName()); }
+	else { UE_LOG(LogTemp, Warning, TEXT("Pawn %s is under Player control"), *ControlledTank->GetName()); }
 
 	// UE_LOG(LogTemp, Warning, TEXT("Player Controller Begin Play"));
 }
