@@ -4,18 +4,67 @@
 
 void ATankPlayerController::BeginPlay()
 {
-	Super::BeginPlay();	// insaures we're overriding beginPlay from the super(parent) class
+	Super::BeginPlay();	// insures we're overriding beginPlay from the super(parent) class
 
 	ATank* ControlledTank = GetControlledTank();
 
 	if (!ControlledTank) { UE_LOG(LogTemp, Warning, TEXT("Failed to capture pawn")); }
 	else { UE_LOG(LogTemp, Warning, TEXT("Pawn %s is under Player control"), *ControlledTank->GetName()); }
 
-	// UE_LOG(LogTemp, Warning, TEXT("Player Controller Begin Play"));
+}
+
+void ATankPlayerController::Tick(float DeltaTime)
+{
+	Super::Tick( DeltaTime );
+
+	AimTowardsCrosshair();
+
+}
+
+void ATankPlayerController::AimTowardsCrosshair()
+{
+	
+	if (!GetControlledTank()) { return; } // insures we possess a PC before we try to aim
+
+	FVector HitLocation; // OUT parameter
+	if (GetSightRayHitLocation(HitLocation)) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Look Direction %s"), *HitLocation.ToString());
+	}
+	
+}
+
+// Get world location of linetrace through crosshair
+bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
+{
+	// Find the crosshair position
+	int32 ViewPortSizeX, ViewPortSizeY;
+	FVector LookDirection;
+	GetViewportSize(ViewPortSizeX, ViewPortSizeY);  // uses OUT parameters of Get...() to init ViewPort x,y
+	FVector2D ScreenLocation = FVector2D(ViewPortSizeX * CrossHairXLocation, ViewPortSizeY * CrossHairYLocation);
+	
+	if (GetLookDirection(ScreenLocation, LookDirection)) { UE_LOG(LogTemp, Warning, TEXT("World Direction %s"), *LookDirection.ToString()); }
+
+	
+
+	// line trace along LookDirection that to see what we hit
+	return true;
+}
+
+bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector & LookDirection) const
+{
+	// "De-project" the screen position of the crosshair to a world direction
+	
+	FVector WorldLocation; // to be discarded
+	float ScreenX = ScreenLocation.X;
+	float ScreenY = ScreenLocation.Y;
+	return DeprojectScreenPositionToWorld(ScreenX, ScreenY, WorldLocation, LookDirection);
 }
 
 ATank*  ATankPlayerController::GetControlledTank() const
 {
 	return Cast<ATank>(GetPawn());
 }
+
+
 
