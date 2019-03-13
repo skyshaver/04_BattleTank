@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankAimingComponent.h"
-
+#include "TankBarrel.h"
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
 {
@@ -13,22 +13,10 @@ UTankAimingComponent::UTankAimingComponent()
 }
 
 
-// Called when the game starts
-void UTankAimingComponent::BeginPlay()
+void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
-	Super::BeginPlay();
+	Barrel = BarrelToSet;
 
-	// ...
-	
-}
-
-
-// Called every frame
-void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
@@ -37,30 +25,40 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 	if (!Barrel) { return; }
 	FVector OutLaunchVelocity;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("ProjectileExit"));
-	// calculatr OutLaunchVelocity
-	if (UGameplayStatics::SuggestProjectileVelocity(
+	// calculate OutLaunchVelocity/ Aim Solution
+	bool bHaveAimSolution = UGameplayStatics::SuggestProjectileVelocity(
 		this,
-		OutLaunchVelocity,
+		OutLaunchVelocity, // OUT
 		StartLocation,
 		HitLocation, //whatever we're aiming at
 		LaunchSpeed, // 
-		false, // bHighArc is false
-		0, //variation of aim radius
-		0, // don't override zgravity
 		ESuggestProjVelocityTraceOption::DoNotTrace
-		
-	)) 
+
+	);
+	if(bHaveAimSolution)
 	{
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
-		auto TankName = GetOwner()->GetName();
-		UE_LOG(LogTemp, Warning, TEXT("%s is Aiming at: %s"),*TankName, *AimDirection.ToString());
+		MoveBarrelTowards(AimDirection);
+		// auto TankName = GetOwner()->GetName();
+		// UE_LOG(LogTemp, Warning, TEXT("%s is Aiming at: %s"),*TankName, *AimDirection.ToString());
+		
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Firing at: %f"), LaunchSpeed); // don't have to dereference primitives
+	// UE_LOG(LogTemp, Warning, TEXT("Firing at: %f"), LaunchSpeed); // don't have to dereference primitives
 }
 
-void UTankAimingComponent::SetBarrelReference(UStaticMeshComponent * BarrelToSet)
+void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
-	Barrel = BarrelToSet;
+	// TODO Move barrel
+	// identify actor's barrel and then use a rotator to move the barrel to the aim solution
+	
+	// work out differnce between current barrel rotation and aim direction
+	FRotator BarrelRotator = Barrel->GetForwardVector().Rotation();
+	FRotator AimAsRotator = AimDirection.Rotation();
+	FRotator DeltaRotator = AimAsRotator - BarrelRotator;
+	// UE_LOG(LogTemp, Warning, TEXT("Aim as Rotator: %s"), *AimAsRotator.ToString());
+	
+
+	Barrel->Elevate(5);
 
 }
 
