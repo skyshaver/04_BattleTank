@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "TankAimingComponent.h"
+
 #include "Tank.generated.h"
 
+class UTankAimingComponent;
 class UTankBarrel;
 UCLASS()
 class BATTLETANK_API ATank : public APawn
@@ -31,7 +32,7 @@ private:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(EditAnywhere, Category = Firing)
-	float LaunchSpeed = 100000.f; // TODO find sensible default
+	float LaunchSpeed = 10000.f; // TODO find sensible default
 
 
 };

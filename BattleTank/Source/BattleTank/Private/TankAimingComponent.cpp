@@ -27,18 +27,27 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 		OutLaunchVelocity, // OUT
 		StartLocation,
 		HitLocation, //whatever we're aiming at
-		LaunchSpeed, // 
+		LaunchSpeed,
+		false, // use a high arc
+		0, // raidus offset
+		0, // zgravity override
 		ESuggestProjVelocityTraceOption::DoNotTrace
 
 	);
 	if(bHaveAimSolution)
 	{
-		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
+		FVector AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
 		
 		/* auto TankName = GetOwner()->GetName();
 		 UE_LOG(LogTemp, Warning, TEXT("%s is Aiming at: %s"),*TankName, *AimDirection.ToString());*/
-		
+		/*auto time = GetWorld()->GetTimeSeconds();
+		UE_LOG(LogTemp, Warning, TEXT("Aim Solution found at %f"), time);*/
+	}
+	else 
+	{
+		auto time = GetWorld()->GetTimeSeconds();
+		UE_LOG(LogTemp, Warning, TEXT("NO Aim Solution found at %f"), time);
 	}
 	// UE_LOG(LogTemp, Warning, TEXT("Firing at: %f"), LaunchSpeed); // don't have to dereference primitives
 }
@@ -55,7 +64,7 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	// UE_LOG(LogTemp, Warning, TEXT("Aim as Rotator: %s"), *AimAsRotator.ToString());
 	
 
-	Barrel->Elevate(.5);
+	Barrel->Elevate(DeltaRotator.Pitch);
 
 }
 

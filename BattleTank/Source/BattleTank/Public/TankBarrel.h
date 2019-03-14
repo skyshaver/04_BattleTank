@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Tank.h"
+
 #include "CoreMinimal.h"
 #include "Components/StaticMeshComponent.h"
 #include "TankBarrel.generated.h"
@@ -20,9 +20,9 @@ public:
 	void Elevate(float RelativeSpeed);
 private:
 	UPROPERTY(EditAnywhere, Category = Setup)
-	float MaxDegreesPerSecond = 20.f;
+	float MaxDegreesPerSecond = 5.f;
 	UPROPERTY(EditAnywhere, Category = Setup)
-	float MaxElevationDegrees = 30.f;
+	float MaxElevationDegrees = 40.f;
 	UPROPERTY(EditAnywhere, Category = Setup)
 	float MinElevationDegrees = 0.f;
 };
