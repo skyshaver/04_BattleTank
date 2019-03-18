@@ -6,7 +6,7 @@
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
 {
-	PrimaryComponentTick.bCanEverTick = true; // does this need to tick?
+	PrimaryComponentTick.bCanEverTick = false; // does this need to tick?
 
 }
 
@@ -64,7 +64,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
-	// TODO Move barrel
+	
 	// identify actor's barrel and then use a rotator to move the barrel to the aim solution
 	
 	// work out differnce between current barrel rotation and aim direction
