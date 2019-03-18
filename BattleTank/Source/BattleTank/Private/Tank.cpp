@@ -31,12 +31,16 @@ void ATank::BeginPlay()
 }
 
 
-
 // Called to bind functionality to input
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void ATank::Fire()
+{
+	UE_LOG(LogTemp, Warning, TEXT("ATank::Fire has been called")); 
 }
 
 void ATank::AimAt(FVector HitLocation) 
