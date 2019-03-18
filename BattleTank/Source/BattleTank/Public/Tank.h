@@ -9,6 +9,8 @@
 
 class UTankAimingComponent;
 class UTankBarrel;
+class UTankTurret;
+
 UCLASS()
 class BATTLETANK_API ATank : public APawn
 {
@@ -18,6 +20,9 @@ public:
 	void AimAt(FVector HitLocation);
 	UFUNCTION(BlueprintCallable, Category = Setup )
 	void SetBarrelReference(UTankBarrel* BarrelToSet); // THIS REFERENCE IS SET IN THE TANK BP EVENT GRAPH
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetTurretReference(UTankTurret* TurretToSet);
+
 
 protected:
 	// Called when the game starts or when spawned

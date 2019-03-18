@@ -8,6 +8,7 @@
 #include "TankAimingComponent.generated.h"
 
 class UTankBarrel;
+class UTankTurret;
 
 // 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -25,9 +26,12 @@ protected:
 public:	
 	void AimAt(FVector HitLocation, float LaunchSpeed);
 	void SetBarrelReference(UTankBarrel* BarrelToSet); // THIS REFERENCE IS SET IN THE TANK BP EVENT GRAPH VIA A CALL IN TANK.H
+	void SetTurretReference(UTankTurret* TurretToSet); // THIS REFERENCE IS SET IN THE TANK BP EVENT GRAPH VIA A CALL IN TANK.H
 
 private:
 	void MoveBarrelTowards(FVector AimDirection);
+	
 	UTankBarrel* Barrel = nullptr;
+	UTankTurret* Turret = nullptr;
 		
 };
