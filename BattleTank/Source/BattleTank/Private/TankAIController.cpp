@@ -5,37 +5,25 @@
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();	// insures we're overriding beginPlay from the super(parent) class
-
-	ATank* ControlledTank = GetControlledTank();
-	if (!ControlledTank) { UE_LOG(LogTemp, Warning, TEXT("Failed to capture pawn")); }
-	else { UE_LOG(LogTemp, Warning, TEXT("Pawn %s is under AI control"), *ControlledTank->GetName()); }
-
-	ATank* PlayerTank = GetPlayerTank();
-	if (!PlayerTank) { UE_LOG(LogTemp, Warning, TEXT("Failed to locate PlayerTank")); }
-	else { UE_LOG(LogTemp, Warning, TEXT("Player Controller %s is found by AI controller"), *PlayerTank->GetName()); }
-
 }
 
 void ATankAIController::Tick(float DeltaTime)
 {
+	PlayerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	ControlledTank = Cast<ATank>(GetPawn());
+
 	Super::Tick(DeltaTime);
-	if (GetPlayerTank())
+
+	if (PlayerTank)
 	{
 		// TODO move towards player
 		// aim at player
-		GetControlledTank()->AimAt(GetPlayerTank()->GetActorLocation());
-		// TODO fire when ready
+		ControlledTank->AimAt(PlayerTank->GetActorLocation());
+		// fire when ready
+		ControlledTank->Fire(); // TODO don't fire every frame
 	}
 
 }
 
-ATank*  ATankAIController::GetControlledTank() const
-{
-	return Cast<ATank>(GetPawn());
-}
 
-ATank * ATankAIController::GetPlayerTank() const
-{
-	return Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
-}
 

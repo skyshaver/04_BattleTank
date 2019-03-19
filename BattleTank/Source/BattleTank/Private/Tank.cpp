@@ -42,13 +42,16 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ATank::Fire()
 {
-	if (!Barrel) { return; }
-	// otherwise spawn a projectile at the barrel exit socket 'ProjectileExit'
-	
-	FVector SpawnLocation = Barrel->GetSocketLocation(FName("ProjectileExit"));
-	FRotator SpawnRotation = Barrel->GetSocketRotation(FName("ProjectileExit"));
-	AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, SpawnLocation, SpawnRotation);
-	Projectile->LaunchProjectile(LaunchSpeed);
+	bool IsReloaded = ((FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds);
+	if (Barrel && IsReloaded) {
+		// otherwise spawn a projectile at the barrel exit socket 'ProjectileExit'
+
+		FVector SpawnLocation = Barrel->GetSocketLocation(FName("ProjectileExit"));
+		FRotator SpawnRotation = Barrel->GetSocketRotation(FName("ProjectileExit"));
+		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, SpawnLocation, SpawnRotation);
+		Projectile->LaunchProjectile(LaunchSpeed);
+		LastFireTime = FPlatformTime::Seconds();
+	}
 }
 
 void ATank::AimAt(FVector HitLocation) 
