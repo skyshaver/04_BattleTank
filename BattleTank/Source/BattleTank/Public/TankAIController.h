@@ -27,4 +27,6 @@ protected:
 private:
 	ATank* ControlledTank;
 	ATank* PlayerTank;	
+	UPROPERTY(EditDefaultsOnly)
+	float AcceptanceRadius = 3000.f;
 };
