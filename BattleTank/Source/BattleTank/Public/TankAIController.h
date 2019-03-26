@@ -9,11 +9,12 @@
 #include "Engine/World.h"
 #include "TankAIController.generated.h"
 
-class ATank;
+
+class ATankAimingComponent;
+
 /**
  * 
  */
-
 
 UCLASS()
 class BATTLETANK_API ATankAIController : public AAIController
@@ -25,8 +26,7 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	ATank* ControlledTank;
-	ATank* PlayerTank;	
+	
 	UPROPERTY(EditDefaultsOnly)
 	float AcceptanceRadius = 3000.f;
 };

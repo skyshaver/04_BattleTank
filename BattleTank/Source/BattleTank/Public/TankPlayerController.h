@@ -11,7 +11,7 @@
 /**
  * 
  */
-class ATank;
+
 class UTankAimingComponent;
 
 UCLASS()
@@ -24,9 +24,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
-	UFUNCTION(BlueprintCallable, Category = "Setup")
-	ATank* GetControlledTank() const;
-
+	
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup") // this macro means we don't need a definition for the following method
 	void FoundAimingComponent(UTankAimingComponent* AimCompRef);
 

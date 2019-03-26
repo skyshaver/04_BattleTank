@@ -1,25 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "TankPlayerController.h"
-#include "Tank.h"
+
 #include "TankAimingComponent.h"
 
 
 void ATankPlayerController::BeginPlay()
 {
-	Super::BeginPlay();	// insures we're overriding beginPlay from the super(parent) class
+	Super::BeginPlay();
 
-	ATank* ControlledTank = GetControlledTank(); // different from ben, he assigns this in AimTowrdsCrosshair
-	UTankAimingComponent* AimingComponent = GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
-	if(AimingComponent)
-	{
-		FoundAimingComponent(AimingComponent); 
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Aiming Component not found"))
-	}
-	
-
+	UTankAimingComponent* AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent)) { return; }
+	FoundAimingComponent(AimingComponent); // broadcasts reference up to bp
 }
 
 void ATankPlayerController::Tick(float DeltaTime)
@@ -27,18 +18,17 @@ void ATankPlayerController::Tick(float DeltaTime)
 	Super::Tick( DeltaTime );
 
 	AimTowardsCrosshair();
-
 }
 
 void ATankPlayerController::AimTowardsCrosshair()
 {
-	
-	if (!GetControlledTank()) { return; } // insures we possess a PC before we try to aim
+	UTankAimingComponent* AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent)) { return; }
 
 	FVector HitLocation; // OUT parameter
 	if (GetSightRayHitLocation(HitLocation)) 
 	{
-		GetControlledTank()->AimAt(HitLocation);
+		AimingComponent->AimAt(HitLocation);
 	}
 	
 }
@@ -58,7 +48,6 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 		// UE_LOG(LogTemp, Warning, TEXT("HitLocation: %s"), *HitLocation.ToString()); 
 		return true;
 	}
-
 	
 	return false;
 }
@@ -97,11 +86,6 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVec
 }
 
 
-
-ATank*  ATankPlayerController::GetControlledTank() const
-{
-	return Cast<ATank>(GetPawn());
-}
 
 
 
