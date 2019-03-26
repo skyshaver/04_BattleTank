@@ -1,7 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// no copy
 
 #include "TankMovementComponent.h"
 #include "TankTrack.h"
+
 void  UTankMovementComponent::Initialize(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet)
 {
 	LeftTrack = LeftTrackToSet;
@@ -14,7 +15,6 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
 	FVector AIForwawdIntention = MoveVelocity.GetSafeNormal();
 	
 	// dot product
-
 	float ForwardThrow = FVector::DotProduct(TankForward, AIForwawdIntention);
 	IntendMoveForward(ForwardThrow);
 
@@ -22,7 +22,6 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
 	float RightThrow = FVector::CrossProduct(TankForward, AIForwawdIntention).Z;
 	IntendTurnRight(RightThrow);
 
-	// UE_LOG(LogTemp, Warning, TEXT("%s vectroing to : %s "), *GetOwner()->GetName(), *AIForwawdIntention.ToString()) 
 }
 
 void  UTankMovementComponent::IntendMoveForward(float Throw)
