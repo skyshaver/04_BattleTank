@@ -1,16 +1,24 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "TankPlayerController.h"
 #include "Tank.h"
+#include "TankAimingComponent.h"
 
 
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();	// insures we're overriding beginPlay from the super(parent) class
 
-	ATank* ControlledTank = GetControlledTank();
-
-	if (!ControlledTank) { UE_LOG(LogTemp, Warning, TEXT("Failed to capture pawn")); }
-	else { UE_LOG(LogTemp, Warning, TEXT("Pawn %s is under Player control"), *ControlledTank->GetName()); }
+	ATank* ControlledTank = GetControlledTank(); // different from ben, he assigns this in AimTowrdsCrosshair
+	UTankAimingComponent* AimingComponent = GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
+	if(AimingComponent)
+	{
+		FoundAimingComponent(AimingComponent); 
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Aiming Component not found"))
+	}
+	
 
 }
 

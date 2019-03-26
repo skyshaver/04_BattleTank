@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// no copy
 
 #pragma once
 
@@ -19,20 +19,16 @@ class BATTLETANK_API ATank : public APawn
 {
 	GENERATED_BODY()
 
-public:
-	UFUNCTION(BlueprintCallable, Category = Setup )
-	void SetBarrelReference(UTankBarrel* BarrelToSet); // THIS REFERENCE IS SET IN THE TANK BP EVENT GRAPH
-	
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetTurretReference(UTankTurret* TurretToSet);
-	
+public:	
+	virtual void BeginPlay() override;
+
 	void AimAt(FVector HitLocation);
 	
 	UFUNCTION(BlueprintCallable, Category = Firing)
 	void Fire();
 
 protected:
-	virtual void BeginPlay() override;
+
 
 	UPROPERTY(BlueprintReadOnly)
 	UTankAimingComponent* TankAimingComponent = nullptr;
@@ -42,8 +38,6 @@ protected:
 
 private:
 	ATank();
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AProjectile> ProjectileBlueprint;
@@ -55,7 +49,8 @@ private:
 	float ReloadTimeInSeconds = 3.f;
 
 	float LastFireTime = 0.f;
-		
+
+	// TODO remove to aimiing component
 	UTankBarrel* Barrel = nullptr;
 
 };

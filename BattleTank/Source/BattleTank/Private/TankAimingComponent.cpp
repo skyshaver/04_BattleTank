@@ -11,16 +11,10 @@ UTankAimingComponent::UTankAimingComponent()
 }
 
 
-void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
+void UTankAimingComponent::Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
 {
-	if (!BarrelToSet) { return; }
-	Barrel = BarrelToSet;
-}
-
-void UTankAimingComponent::SetTurretReference(UTankTurret * TurretToSet)
-{
-	if (!TurretToSet) { return; }
 	Turret = TurretToSet;
+	Barrel = BarrelToSet;
 }
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
@@ -38,7 +32,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 		HitLocation, //whatever we're aiming at
 		LaunchSpeed,
 		false, // use a high arc
-		0, // raidus offset
+		0, // radius offset
 		0, // zgravity override
 		ESuggestProjVelocityTraceOption::DoNotTrace
 
@@ -54,17 +48,12 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 		/*auto time = GetWorld()->GetTimeSeconds();
 		UE_LOG(LogTemp, Warning, TEXT("Aim Solution found at %f"), time);*/
 	}
-	else 
-	{
-		auto time = GetWorld()->GetTimeSeconds();
-		UE_LOG(LogTemp, Warning, TEXT("NO Aim Solution found at %f"), time);
-	}
-	// UE_LOG(LogTemp, Warning, TEXT("Firing at: %f"), LaunchSpeed); // don't have to dereference primitives
+	
 }
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
-	
+	if (!Barrel || !Turret) { return; }
 	// identify actor's barrel and then use a rotator to move the barrel to the aim solution
 	
 	// work out differnce between current barrel rotation and aim direction
