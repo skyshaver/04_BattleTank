@@ -5,9 +5,34 @@
 #include "TankTurret.h"
 #include "Projectile.h"
 
+
+
 UTankAimingComponent::UTankAimingComponent()
 {
-	PrimaryComponentTick.bCanEverTick = false; // does this need to tick?
+	PrimaryComponentTick.bCanEverTick = true; 
+}
+
+void UTankAimingComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	LastFireTime = FPlatformTime::Seconds(); //  all players wait for reload from start of game
+}
+
+void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
+{
+	if (FPlatformTime::Seconds() - LastFireTime < ReloadTimeInSeconds) 
+	{
+		FiringState = EFiringState::Reloading;
+	}
+	else if (bIsBarrelMoving())
+	{
+		FiringState = EFiringState::Aiming;
+	}
+	else
+	{
+		FiringState = EFiringState::Locked;
+	}
+	
 }
 
 void UTankAimingComponent::Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
@@ -33,11 +58,10 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 		0, // radius offset
 		0, // zgravity override
 		ESuggestProjVelocityTraceOption::DoNotTrace
-
 	);
 	if(bHaveAimSolution)
 	{
-		FVector AimDirection = OutLaunchVelocity.GetSafeNormal();
+		AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);	
 	}
 	
@@ -56,12 +80,20 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	Turret->Rotate(DeltaRotator.Yaw);
 }
 
+bool UTankAimingComponent::bIsBarrelMoving()
+{
+	if (!ensure(Barrel)) { return false; }
+
+	return !Barrel->GetForwardVector().Equals(AimDirection, .01);
+}
+
 void UTankAimingComponent::Fire()
 {
-	if (!ensure(Barrel)) { return; }
-	bool IsReloaded = ((FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds);
-	if (IsReloaded) {
-
+	
+	
+	if (FiringState != EFiringState::Reloading) {
+		if (!ensure(Barrel)) { return; }
+		if (!ensure(ProjectileBlueprint)) { return; }
 		FVector SpawnLocation = Barrel->GetSocketLocation(FName("ProjectileExit"));
 		FRotator SpawnRotation = Barrel->GetSocketRotation(FName("ProjectileExit"));
 		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, SpawnLocation, SpawnRotation);

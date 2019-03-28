@@ -20,11 +20,11 @@ class BATTLETANK_API ATankPlayerController : public APlayerController
 	GENERATED_BODY()
 
 public:
-	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
+	
 
 protected:
-	
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup") // this macro means we don't need a definition for the following method
 	void FoundAimingComponent(UTankAimingComponent* AimCompRef);
 
