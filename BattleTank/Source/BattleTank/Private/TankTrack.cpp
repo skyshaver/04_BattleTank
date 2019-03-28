@@ -4,29 +4,46 @@
 
 UTankTrack::UTankTrack()
 {
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
-void UTankTrack::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
+void UTankTrack::BeginPlay()
+{
+	Super::BeginPlay();
+	OnComponentHit.AddDynamic(this, &UTankTrack::OnHit);
+
+}
+
+
+void UTankTrack::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+{
+	// drive tracks, apply sideways force
+	DriveTrack();
+	ApplySidewaysForce();
+	CurrentThrottle = 0;
+
+	
+}
+
+void UTankTrack::ApplySidewaysForce()
 {
 	// calculate the slippage speed
 	float SlippageSpeed = FVector::DotProduct(GetRightVector(), GetComponentVelocity());
 	// work-out the required acceleration this frame to correct
-	FVector CorrectionAcceleration = -SlippageSpeed / DeltaTime * GetRightVector();
+	FVector CorrectionAcceleration = -SlippageSpeed / GetWorld()->GetDeltaSeconds() * GetRightVector();
 	// calculate and apply sideways for F = ma
 	UStaticMeshComponent* TankRoot = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent()); // need to cast to get access to mass in kg parameter in bp
 	auto CorrectionForce = (TankRoot->GetMass() * CorrectionAcceleration) / 2; // divide by 2 as there are 2 tracks
 	TankRoot->AddForce(CorrectionForce);
-
 }
-
 void UTankTrack::SetThrottle(float Throttle)
 {
-	/*float Time = GetWorld()->GetTimeSeconds();
-	auto Name = GetName();
-	UE_LOG(LogTemp, Warning, TEXT("%f %s Moves at : %f"), Time, *Name, Throttle);*/
+	CurrentThrottle = FMath::Clamp<float>(CurrentThrottle + Throttle, -1, 1);
+}
 
-	FVector ForceApplied = GetForwardVector() * Throttle * TrackMaxDrivingForce;
+void UTankTrack::DriveTrack()
+{
+	FVector ForceApplied = GetForwardVector() * CurrentThrottle * TrackMaxDrivingForce;
 	FVector ForceLocation = GetComponentLocation();
 	UPrimitiveComponent* TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
 	TankRoot->AddForceAtLocation(ForceApplied, ForceLocation);

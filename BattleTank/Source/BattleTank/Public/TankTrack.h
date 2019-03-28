@@ -22,8 +22,15 @@ public:
 	float TrackMaxDrivingForce = 400000; // assume 40 tonnes x 1 g acceleration
 
 protected:
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+	virtual void BeginPlay() override;
 private:
 	UTankTrack();
 
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+
+	void ApplySidewaysForce();
+	void DriveTrack();
+
+	float CurrentThrottle = 0.f;
 };
