@@ -18,9 +18,15 @@ void UTankAimingComponent::BeginPlay()
 	LastFireTime = FPlatformTime::Seconds(); //  all players wait for reload from start of game
 }
 
+
+
 void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
 {
-	if (FPlatformTime::Seconds() - LastFireTime < ReloadTimeInSeconds) 
+	if (RoundsLeft <= 0)
+	{
+		FiringState = EFiringState::OutOfAmmo;
+	}
+	else if (FPlatformTime::Seconds() - LastFireTime < ReloadTimeInSeconds) 
 	{
 		FiringState = EFiringState::Reloading;
 	}
@@ -93,14 +99,12 @@ bool UTankAimingComponent::bIsBarrelMoving()
 {
 	if (!ensure(Barrel)) { return false; }
 
-	return !Barrel->GetForwardVector().Equals(AimDirection, .01);
+	return !Barrel->GetForwardVector().Equals(AimDirection, .05);
 }
 
 void UTankAimingComponent::Fire()
 {
-	
-	
-	if (FiringState != EFiringState::Reloading) {
+	if (FiringState == EFiringState::Locked || FiringState == EFiringState::Aiming) {
 		if (!ensure(Barrel)) { return; }
 		if (!ensure(ProjectileBlueprint)) { return; }
 		FVector SpawnLocation = Barrel->GetSocketLocation(FName("ProjectileExit"));
@@ -108,8 +112,17 @@ void UTankAimingComponent::Fire()
 		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, SpawnLocation, SpawnRotation);
 		Projectile->LaunchProjectile(LaunchSpeed);
 		LastFireTime = FPlatformTime::Seconds();
+		RoundsLeft--;
 	}
 }
 
+EFiringState UTankAimingComponent::GetFiringState() const
+{
+	return FiringState;
+}
 
+int UTankAimingComponent::GetRoundsLeft() const
+{
+	return RoundsLeft;
+}
 
