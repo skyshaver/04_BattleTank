@@ -25,12 +25,13 @@ void ATankPlayerController::AimTowardsCrosshair()
 	if (!GetPawn()) { return; }
 	UTankAimingComponent* AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(AimingComponent)) { return; }
-
 	FVector HitLocation; // OUT parameter
-	if (GetSightRayHitLocation(HitLocation)) 
+	
+	if (GetSightRayHitLocation(HitLocation))
 	{
 		AimingComponent->AimAt(HitLocation);
 	}
+
 	
 }
 
@@ -45,11 +46,10 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 	
 	if (GetLookDirection(ScreenLocation, LookDirection))
 	{
-		GetLookVectorHitLocation( LookDirection, HitLocation);
+		return GetLookVectorHitLocation( LookDirection, HitLocation);
 		// UE_LOG(LogTemp, Warning, TEXT("HitLocation: %s"), *HitLocation.ToString()); 
-		return true;
+		
 	}
-	
 	return false;
 }
 
