@@ -11,7 +11,6 @@ void UTankTrack::BeginPlay()
 {
 	Super::BeginPlay();
 	OnComponentHit.AddDynamic(this, &UTankTrack::OnHit);
-
 }
 
 
@@ -21,7 +20,6 @@ void UTankTrack::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 	DriveTrack();
 	ApplySidewaysForce();
 	CurrentThrottle = 0;
-
 	
 }
 

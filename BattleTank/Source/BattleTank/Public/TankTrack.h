@@ -19,7 +19,6 @@ public:
 
 	// max force per track in newtons in si
 	UPROPERTY(EditDefaultsOnly)
-	
 	float TrackMaxDrivingForce = 30000000.0; // assume 40 tonnes x 1 g acceleration
 
 protected:
