@@ -39,13 +39,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Firing)
 	int32 GetRoundsLeft() const;
 
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AProjectile> ProjectileBlueprint;
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 	EFiringState FiringState = EFiringState::Reloading;
 
 	virtual void BeginPlay() override;
 
-	
 
 private:
 	UTankAimingComponent();
@@ -61,8 +63,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float LaunchSpeed = 10000.f; // TODO find sensible default
 
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	TSubclassOf<AProjectile> ProjectileBlueprint;
+
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float ReloadTimeInSeconds = .1f;
