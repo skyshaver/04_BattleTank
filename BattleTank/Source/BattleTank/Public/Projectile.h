@@ -3,11 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "GameFramework/ProjectileMovementComponent.h"
-#include "Particles/ParticleSystemComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "GameFramework/Actor.h"
+#include "GameFramework/DamageType.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
+#include "Public/TimerManager.h"
 #include "Projectile.generated.h"
 
 UCLASS()
@@ -17,7 +20,7 @@ class BATTLETANK_API AProjectile : public AActor
 	
 public:	
 	void LaunchProjectile(float LaunchSpeed);
-
+	
 protected:
 	
 	virtual void BeginPlay() override;
@@ -25,6 +28,8 @@ protected:
 
 private:
 	AProjectile();
+
+	void OnTimerExpire();
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
@@ -42,5 +47,11 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	URadialForceComponent* ExplosionForce = nullptr;
-	
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float DestroyDelay = 5.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float BaseDamage = 20.f;
+
 };

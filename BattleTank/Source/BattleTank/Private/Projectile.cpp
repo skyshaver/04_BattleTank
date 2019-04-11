@@ -26,8 +26,6 @@ AProjectile::AProjectile()
 	ProjectileMovement->bAutoActivate = false;
 }
 
-
-// Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
@@ -40,12 +38,41 @@ void AProjectile::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor,
 	LaunchBlast->Deactivate();
 	ImpactBlast->Activate();
 	ExplosionForce->FireImpulse();
+
+	// destroys mesh but does not destroy underlying object
+	SetRootComponent(ImpactBlast);
+	CollisionMesh->DestroyComponent();
+
+	// damage to actor
+	UGameplayStatics::ApplyRadialDamage(
+		this,
+		BaseDamage,
+		GetActorLocation(),
+		ExplosionForce->Radius,
+		UDamageType::StaticClass(),
+		TArray<AActor*>() //Damage all actors in radius
+	);
+
+
+
+	// set timer from creation of object which deletes object from memory after 5 secs.
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(
+		TimerHandle,
+		this,
+		&AProjectile::OnTimerExpire,
+		DestroyDelay,
+		false
+		
+	);
+}
+void AProjectile::OnTimerExpire()
+{
+	Destroy();
 }
 
 void AProjectile::LaunchProjectile(float LaunchSpeed)
 {
-	/*auto Time = GetWorld()->GetTimeSeconds();
-	UE_LOG(LogTemp, Warning, TEXT("%f Projectile fires at : %f"), Time, LaunchSpeed);*/
 	ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * LaunchSpeed);
 	ProjectileMovement->Activate();
 }

@@ -47,12 +47,11 @@ protected:
 	EFiringState FiringState = EFiringState::Reloading;
 
 	virtual void BeginPlay() override;
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
 
 private:
 	UTankAimingComponent();
-
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
 	void MoveBarrelTowards(FVector AimDirection);
 	bool bIsBarrelMoving();
@@ -63,10 +62,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float LaunchSpeed = 10000.f; // TODO find sensible default
 
-
-
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	float ReloadTimeInSeconds = .1f;
+	float ReloadTimeInSeconds = 2.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	int32 RoundsLeft = 30;
