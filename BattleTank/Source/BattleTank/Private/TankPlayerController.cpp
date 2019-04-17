@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "TankPlayerController.h"
-
+#include "Tank.h"
 #include "TankAimingComponent.h"
 
 
@@ -11,6 +11,23 @@ void ATankPlayerController::BeginPlay()
 	UTankAimingComponent* AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(AimingComponent)) { return; }
 	FoundAimingComponent(AimingComponent); // broadcasts reference up to bp
+}
+
+void ATankPlayerController::SetPawn(APawn * InPawn)
+{
+	Super::SetPawn(InPawn);
+	if (InPawn)
+	{
+		auto PossessedTank = Cast<ATank>(InPawn);
+		if (!ensure(PossessedTank)) { return; }
+		// subscribe our local method to death event NOTE the ref to the function name does not include the ()
+		PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankPlayerController::OnPossessedTankDeath);
+	}
+}
+
+void ATankPlayerController::OnPossessedTankDeath()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Received!"));
 }
 
 void ATankPlayerController::Tick(float DeltaTime)

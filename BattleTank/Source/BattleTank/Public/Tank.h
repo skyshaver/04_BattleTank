@@ -7,6 +7,8 @@
 #include "Engine/World.h"
 #include "Tank.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTankDelegate);
+
 UCLASS()
 class BATTLETANK_API ATank : public APawn
 {
@@ -17,8 +19,12 @@ public:
 
 	UFUNCTION(Blueprintpure, Category = "Health") //pure is const in this case
 	float GetHealthPercent() const;
-	// metrhod called by engine when a damaging actor is in contact
+	// method called by engine when a damaging actor is in contact
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEvent, class AController * EventInstigator, AActor * DamageCauser) override;
+
+
+	FTankDelegate OnDeath;
+	
 
 private:
 	ATank();

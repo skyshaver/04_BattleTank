@@ -2,11 +2,29 @@
 #include "TankAIController.h"
 #include "TankMovementComponent.h"
 #include "TankAimingComponent.h"
+#include "Tank.h"
 
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();	// insures we're overriding beginPlay from the super(parent) class
 
+}
+
+void ATankAIController::SetPawn(APawn * InPawn)
+{
+	Super::SetPawn(InPawn);
+	if (InPawn)
+	{
+		auto PossessedTank = Cast<ATank>(InPawn);
+		if (!ensure(PossessedTank)) { return; }
+		// subscribe our local method to death event NOTE the ref to the function name does not include the ()
+		PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnPossessedTankDeath);
+	}
+}
+
+void ATankAIController::OnPossessedTankDeath()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Received!"));
 }
 
 void ATankAIController::Tick(float DeltaTime)
@@ -35,6 +53,8 @@ void ATankAIController::Tick(float DeltaTime)
 	
 
 }
+
+
 
 
 
