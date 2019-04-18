@@ -7,6 +7,7 @@
 #include "Engine/World.h"
 #include "Tank.generated.h"
 
+// broadcast delegate
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTankDelegate);
 
 UCLASS()
@@ -33,5 +34,5 @@ private:
 	int32 StartingHealth = 100;
 
 	UPROPERTY(VisibleAnywhere, Category = "Health")
-	int32 CurrentHealth = StartingHealth;
+	int32 CurrentHealth; // init in beginplay so bp can edit the startinghealth
 };

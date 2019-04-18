@@ -24,6 +24,8 @@ void ATankAIController::SetPawn(APawn * InPawn)
 
 void ATankAIController::OnPossessedTankDeath()
 {
+	if (!GetPawn()) { return; }
+	GetPawn()->DetachFromControllerPendingDestroy();
 	UE_LOG(LogTemp, Warning, TEXT("Received!"));
 }
 
@@ -34,7 +36,7 @@ void ATankAIController::Tick(float DeltaTime)
 
 	Super::Tick(DeltaTime);
 
-	if (!ensure(PlayerTank || ControlledTank)) { return; }
+	if (!ensure(PlayerTank && ControlledTank)) { return; }
 	
 	// move towards player
 	MoveToActor(PlayerTank, AcceptanceRadius);
