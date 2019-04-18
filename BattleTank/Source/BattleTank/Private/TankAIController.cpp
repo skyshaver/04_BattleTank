@@ -17,7 +17,7 @@ void ATankAIController::SetPawn(APawn* InPawn)
 	if (InPawn)
 	{
 		auto PossessedTank = Cast<ATank>(InPawn);
-		if (!ensure(PossessedTank)) { return; }
+		if (!PossessedTank) { return; }
 		// subscribe our local method to death event NOTE the ref to the function name does not include the ()
 		PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnPossessedTankDeath);
 	}
@@ -37,7 +37,7 @@ void ATankAIController::Tick(float DeltaTime)
 
 	Super::Tick(DeltaTime);
 
-	if (!ensure(PlayerTank && ControlledTank)) { return; }
+	if (!(PlayerTank && ControlledTank)) { return; }
 	
 	// move towards player
 	MoveToActor(PlayerTank, AcceptanceRadius);
