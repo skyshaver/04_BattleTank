@@ -13,7 +13,7 @@ void ATankPlayerController::BeginPlay()
 	FoundAimingComponent(AimingComponent); // broadcasts reference up to bp
 }
 
-void ATankPlayerController::SetPawn(APawn * InPawn)
+void ATankPlayerController::SetPawn(APawn* InPawn)
 {
 	Super::SetPawn(InPawn);
 	if (InPawn)
@@ -50,7 +50,6 @@ void ATankPlayerController::AimTowardsCrosshair()
 		AimingComponent->AimAt(HitLocation);
 	}
 
-	
 }
 
 // Get world location of linetrace through crosshair
@@ -64,9 +63,7 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 	
 	if (GetLookDirection(ScreenLocation, LookDirection))
 	{
-		return GetLookVectorHitLocation( LookDirection, HitLocation);
-		// UE_LOG(LogTemp, Warning, TEXT("HitLocation: %s"), *HitLocation.ToString()); 
-		
+		return GetLookVectorHitLocation( LookDirection, HitLocation);	
 	}
 	return false;
 }
@@ -74,7 +71,6 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const
 {
 	// "De-project" the screen position of the crosshair to a world direction
-	
 	FVector WorldLocation; // to be discarded
 	float ScreenX = ScreenLocation.X;
 	float ScreenY = ScreenLocation.Y;
@@ -90,7 +86,7 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVec
 		HitResult,
 		StartLocation,
 		EndLocation,
-		ECollisionChannel::ECC_Visibility
+		ECollisionChannel::ECC_Camera
 	))
 	{
 		HitLocation = HitResult.Location;

@@ -19,8 +19,7 @@ void UTankAimingComponent::BeginPlay()
 }
 
 
-
-void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
+void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	if (RoundsLeft <= 0)
 	{
@@ -49,10 +48,10 @@ void UTankAimingComponent::Initialize(UTankBarrel* BarrelToSet, UTankTurret* Tur
 
 void UTankAimingComponent::AimAt(FVector HitLocation)
 {
-	
 	if (!ensure(Barrel || Turret)) { return; }
 	FVector OutLaunchVelocity;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("ProjectileExit"));
+
 	// calculate OutLaunchVelocity/ Aim Solution
 	bool bHaveAimSolution = UGameplayStatics::SuggestProjectileVelocity(
 		this,

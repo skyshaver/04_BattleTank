@@ -33,7 +33,7 @@ void AProjectile::BeginPlay()
 	
 }
 
-void AProjectile::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
+void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
 	LaunchBlast->Deactivate();
 	ImpactBlast->Activate();
@@ -60,7 +60,7 @@ void AProjectile::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor,
 	GetWorld()->GetTimerManager().SetTimer(
 		TimerHandle,
 		this,
-		&AProjectile::OnTimerExpire,
+		&AProjectile::OnTimerExpire, // out parameter that calls local delegate method
 		DestroyDelay,
 		false
 		

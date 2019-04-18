@@ -34,6 +34,7 @@ void UTankTrack::ApplySidewaysForce()
 	auto CorrectionForce = (TankRoot->GetMass() * CorrectionAcceleration) / 2; // divide by 2 as there are 2 tracks
 	TankRoot->AddForce(CorrectionForce);
 }
+
 void UTankTrack::SetThrottle(float Throttle)
 {
 	CurrentThrottle = FMath::Clamp<float>(CurrentThrottle + Throttle, -1, 1);

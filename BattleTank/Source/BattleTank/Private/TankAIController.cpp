@@ -1,4 +1,5 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// no copy
+
 #include "TankAIController.h"
 #include "TankMovementComponent.h"
 #include "TankAimingComponent.h"
@@ -10,7 +11,7 @@ void ATankAIController::BeginPlay()
 
 }
 
-void ATankAIController::SetPawn(APawn * InPawn)
+void ATankAIController::SetPawn(APawn* InPawn)
 {
 	Super::SetPawn(InPawn);
 	if (InPawn)
@@ -52,8 +53,6 @@ void ATankAIController::Tick(float DeltaTime)
 		AimingComponent->Fire();
 	}
 	
-	
-
 }
 
 

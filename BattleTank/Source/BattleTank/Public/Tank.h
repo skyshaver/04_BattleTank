@@ -18,14 +18,12 @@ class BATTLETANK_API ATank : public APawn
 public:
 	virtual void BeginPlay() override;
 
-	UFUNCTION(Blueprintpure, Category = "Health") //pure is const in this case
+	UFUNCTION(Blueprintpure, Category = "Health") // pure is const in this case
 	float GetHealthPercent() const;
 	// method called by engine when a damaging actor is in contact
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEvent, class AController * EventInstigator, AActor * DamageCauser) override;
 
-
 	FTankDelegate OnDeath;
-	
 
 private:
 	ATank();
@@ -34,5 +32,5 @@ private:
 	int32 StartingHealth = 100;
 
 	UPROPERTY(VisibleAnywhere, Category = "Health")
-	int32 CurrentHealth; // init in beginplay so bp can edit the startinghealth
+	int32 CurrentHealth; // init in beginplay() so bp can edit the startinghealth
 };
