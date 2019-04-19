@@ -7,14 +7,16 @@ ASprungWheel::ASprungWheel()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	SpringComponent = CreateDefaultSubobject<UPhysicsConstraintComponent>(FName("SpringComponent"));
+	SetRootComponent(SpringComponent);
+	
 	MassMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("MassMesh"));
-	SetRootComponent(MassMesh);
+	MassMesh->SetupAttachment(SpringComponent);
 
 	WheelMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("WheelMesh"));
-	WheelMesh->SetupAttachment(MassMesh);
+	WheelMesh->SetupAttachment(SpringComponent);
 
-	SpringComponent = CreateDefaultSubobject<UPhysicsConstraintComponent>(FName("SpringComponent"));
-	SpringComponent->SetupAttachment(MassMesh);
+	
 
 }
 
@@ -22,6 +24,15 @@ ASprungWheel::ASprungWheel()
 void ASprungWheel::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (GetAttachParentActor())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NOt null"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Null"));
+	}
 	
 }
 
