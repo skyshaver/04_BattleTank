@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "Components/SceneComponent.h"
 #include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
 #include "SpawnPoint.generated.h"
 
 
