@@ -17,7 +17,7 @@ ASprungWheel::ASprungWheel()
 
 }
 
-// Called when the game starts or when spawned
+
 void ASprungWheel::BeginPlay()
 {
 	Super::BeginPlay();
@@ -34,7 +34,7 @@ void ASprungWheel::SetupConstraint()
 	SpringConstraintComponent->SetConstrainedComponents(BodyRoot, NAME_None, WheelMesh, NAME_None);
 }
 
-// Called every frame
+
 void ASprungWheel::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
