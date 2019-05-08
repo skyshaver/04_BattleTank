@@ -10,10 +10,14 @@ ASprungWheel::ASprungWheel()
 	SpringConstraintComponent = CreateDefaultSubobject<UPhysicsConstraintComponent>(FName("SpringComponent"));
 	SetRootComponent(SpringConstraintComponent);
 	
-	WheelMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("WheelMesh"));
-	WheelMesh->SetupAttachment(SpringConstraintComponent);
+	AxelMesh = CreateDefaultSubobject<USphereComponent>(FName("AxelMesh"));
+	AxelMesh->SetupAttachment(SpringConstraintComponent);
 
-	
+	WheelMesh = CreateDefaultSubobject<USphereComponent>(FName("WheelMesh"));
+	WheelMesh->SetupAttachment(AxelMesh);
+
+	AxelConstraintComponent = CreateDefaultSubobject<UPhysicsConstraintComponent>(FName("AxelComponent"));
+	AxelConstraintComponent->SetupAttachment(AxelMesh);
 
 }
 
@@ -31,7 +35,8 @@ void ASprungWheel::SetupConstraint()
 	if (!GetAttachParentActor()) { return; }
 	UPrimitiveComponent* BodyRoot = Cast<UPrimitiveComponent>(GetAttachParentActor()->GetRootComponent());
 	if (!BodyRoot) { return; }
-	SpringConstraintComponent->SetConstrainedComponents(BodyRoot, NAME_None, WheelMesh, NAME_None);
+	SpringConstraintComponent->SetConstrainedComponents(BodyRoot, NAME_None, AxelMesh, NAME_None);
+	AxelConstraintComponent->SetConstrainedComponents(AxelMesh, NAME_None, WheelMesh, NAME_None);
 }
 
 
