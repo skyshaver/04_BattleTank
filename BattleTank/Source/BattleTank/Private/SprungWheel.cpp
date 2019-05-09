@@ -22,6 +22,7 @@ ASprungWheel::ASprungWheel()
 }
 
 
+
 void ASprungWheel::BeginPlay()
 {
 	Super::BeginPlay();
@@ -44,5 +45,10 @@ void ASprungWheel::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ASprungWheel::AddDrivingForce(float ForceMagnitude)
+{
+	WheelMesh->AddForce(AxelMesh->GetForwardVector() * ForceMagnitude);
 }
 

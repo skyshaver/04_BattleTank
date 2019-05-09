@@ -18,18 +18,18 @@ class BATTLETANK_API USpawnPoint : public USceneComponent
 public:	
 	
 	USpawnPoint();
+	AActor* GetSpawnedActor() const;
+
 
 protected:
 	
 	virtual void BeginPlay() override;
-
-public:	
-	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AActor> SpawnClass;
-		
+	UPROPERTY()
+	AActor* SpawnedActor = nullptr;
 };

@@ -17,6 +17,8 @@ class BATTLETANK_API ASprungWheel : public AActor
 public:
 
 	ASprungWheel();
+
+	void AddDrivingForce(float ForceMagnitude);
 	
 protected:
 	// Called when the game starts or when spawned
