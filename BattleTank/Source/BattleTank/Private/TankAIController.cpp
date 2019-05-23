@@ -41,6 +41,10 @@ void ATankAIController::Tick(float DeltaTime)
 	
 	// move towards player
 	MoveToActor(PlayerTank, AcceptanceRadius);
+	DistanceToPlayer = ControlledTank->GetDistanceTo(PlayerTank);
+	UE_LOG(LogTemp, Warning, TEXT("Distance to player: %f"), DistanceToPlayer);
+
+
 
 	// aim at player and fire
 	UTankAimingComponent* AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
@@ -48,7 +52,7 @@ void ATankAIController::Tick(float DeltaTime)
 	
 	AimingComponent->AimAt(PlayerTank->GetActorLocation());
 	
-	if (AimingComponent->GetFiringState() == EFiringState::Locked)
+	if (AimingComponent->GetFiringState() == EFiringState::Locked && DistanceToPlayer < 9000.f)
 	{
 		AimingComponent->Fire();
 	}
