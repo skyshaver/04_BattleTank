@@ -3,13 +3,23 @@
 #include "TankAimingComponent.h"
 #include "TankBarrel.h"
 #include "TankTurret.h"
+#include "Tank.h"
 #include "Projectile.h"
-
+#include "ConstructorHelpers.h"
 
 
 UTankAimingComponent::UTankAimingComponent()
 {
-	PrimaryComponentTick.bCanEverTick = true; 
+	PrimaryComponentTick.bCanEverTick = true;
+
+	static ConstructorHelpers::FObjectFinder<USoundCue> FireCue(TEXT("/Game/Audio/Tank_Sounds/FireCue.FireCue"));
+	// Store a reference to the Cue asset - we'll need it later.
+	FireAudioCue = FireCue.Object;
+	// Create an audio component, the audio component wraps the Cue, and allows us to interact with
+	// it, and its parameters from code.
+	FireAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("GrabberAudioCue"));
+	// I don't want the sound playing the moment it's created.
+	FireAudioComponent->bAutoActivate = false; // don't play the sound immediately.
 }
 
 void UTankAimingComponent::BeginPlay()
@@ -17,7 +27,14 @@ void UTankAimingComponent::BeginPlay()
 	Super::BeginPlay();
 	LastFireTime = FPlatformTime::Seconds(); //  all players wait for reload from start of game
 }
-
+void UTankAimingComponent::PostInitProperties()
+{
+	Super::PostInitProperties();
+	if (FireAudioCue->IsValidLowLevelFast())
+	{
+		FireAudioComponent->SetSound(FireAudioCue);
+	}
+}
 
 void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -110,6 +127,7 @@ void UTankAimingComponent::Fire()
 		FRotator SpawnRotation = Barrel->GetSocketRotation(FName("ProjectileExit"));
 		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, SpawnLocation, SpawnRotation);
 		Projectile->LaunchProjectile(LaunchSpeed);
+		FireAudioComponent->Play();
 		LastFireTime = FPlatformTime::Seconds();
 		RoundsLeft--;
 	}

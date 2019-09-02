@@ -1,6 +1,9 @@
 // no copy
 
 #include "Tank.h"
+#include "ConstructorHelpers.h"
+
+
 
 
 ATank::ATank()
@@ -8,11 +11,13 @@ ATank::ATank()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
+
 void ATank::BeginPlay() 
 {
 	Super::BeginPlay();
 	CurrentHealth = StartingHealth;
 }
+
 
 float ATank::GetHealthPercent() const
 {

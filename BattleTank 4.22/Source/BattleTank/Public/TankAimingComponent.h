@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
+#include "Components/AudioComponent.h"
 #include "TankAimingComponent.generated.h"
 
 UENUM()
@@ -49,7 +51,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
-
+	virtual void PostInitProperties() override;
 private:
 	UTankAimingComponent();
 
@@ -71,4 +73,14 @@ private:
 	float LastFireTime = 0.f;
 
 	FVector AimDirection;
+
+	// audio
+	UPROPERTY(VisibleAnywhere, Category = "Audio")
+	USoundCue* FireAudioCue;
+
+	UPROPERTY(VisibleAnywhere, Category = "Audio")
+	USoundCue* FireStartupCue;
+
+	UPROPERTY(VisibleAnywhere, Category = "Audio")
+	UAudioComponent* FireAudioComponent;
 };
