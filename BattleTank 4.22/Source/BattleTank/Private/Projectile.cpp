@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Projectile.h"
+#include "ConstructorHelpers.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -24,6 +25,16 @@ AProjectile::AProjectile()
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(FName("Projectile Movement"));
 	ProjectileMovement->bAutoActivate = false;
+
+	// audio
+	static ConstructorHelpers::FObjectFinder<USoundCue> ProjectileImpactCue(TEXT("/Game/Audio/Tank_Sounds/ProjectileImpactCue.ProjectileImpactCue"));
+	// Store a reference to the Cue asset - we'll need it later.
+	ProjectileAudioCue = ProjectileImpactCue.Object;
+	// Create an audio component, the audio component wraps the Cue, and allows us to interact with
+	// it, and its parameters from code.
+	ProjectileAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("ProjectileImpactCue"));
+	// I don't want the sound playing the moment it's created.
+	ProjectileAudioComponent->bAutoActivate = false; // don't play the sound immediately.
 }
 
 void AProjectile::BeginPlay()
@@ -31,6 +42,15 @@ void AProjectile::BeginPlay()
 	Super::BeginPlay();
 	CollisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 	
+}
+
+void AProjectile::PostInitProperties()
+{
+	Super::PostInitProperties();
+	if (ProjectileAudioCue->IsValidLowLevelFast())
+	{
+		ProjectileAudioComponent->SetSound(ProjectileAudioCue);
+	}
 }
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
@@ -53,7 +73,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 		TArray<AActor*>() //Damage all actors in radius
 	);
 
-
+	ProjectileAudioComponent->Play();
 
 	// set timer from creation of object which deletes object from memory after 5 secs.
 	FTimerHandle TimerHandle;

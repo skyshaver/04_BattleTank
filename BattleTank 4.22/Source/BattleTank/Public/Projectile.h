@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/AudioComponent.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/DamageType.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -11,6 +12,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 #include "Public/TimerManager.h"
+#include "Sound/SoundCue.h"
 #include "Projectile.generated.h"
 
 UCLASS()
@@ -24,7 +26,7 @@ public:
 protected:
 	
 	virtual void BeginPlay() override;
-	
+	virtual void PostInitProperties() override;
 
 private:
 	AProjectile();
@@ -53,5 +55,15 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float BaseDamage = 20.f;
+
+	// audio
+	UPROPERTY(VisibleAnywhere, Category = "Audio")
+	USoundCue* ProjectileAudioCue;
+
+	UPROPERTY(VisibleAnywhere, Category = "Audio")
+	USoundCue* ProjectileStartupCue;
+
+	UPROPERTY(VisibleAnywhere, Category = "Audio")
+	UAudioComponent* ProjectileAudioComponent;
 
 };
