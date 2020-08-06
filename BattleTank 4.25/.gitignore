@@ -88,3 +88,10 @@ DerivedDataCache/*
 
 # map files
 *.umap
+
+# fbx files
+*.fbx
+*.FBX
+
+# Content folder
+Content/
